@@ -1,0 +1,34 @@
+# How to Install Latest Apache Ant on Ubuntu 18.04
+
+# Apache Ant is a Java library and command-line tool for automating software build processes. This guide will help you to install the latest release of Apache Ant on Ubuntu, Debian and Linux Mint.
+
+# Initially install Java on your system:
+
+$ sudo add-apt-repository ppa:webupd8team/java 
+$ sudo apt update 
+$ sudo apt install oracle-java8-set-default 
+
+java --version 
+
+# Install Latest apache ant manually 
+
+export VER="1.10.6"
+
+$ sudo apt install -y wget vim
+
+$ wget https://www-eu.apache.org/dist//ant/binaries/apache-ant-${VER}-bin.tar.gz
+
+$ sudo tar -xvf apache-ant-${VER}-bin.tar.gz -C /usr/local
+
+$ sudo ln -s /usr/local/apache-ant-${VER}/ /usr/local/ant
+
+$ sudo vim /etc/profile.d/ant.sh
+
+export ANT_HOME=/usr/local/ant
+export PATH=${PATH}:${ANT_HOME}/bin
+
+$ source /etc/profile.d/ant.sh
+$ echo $ANT_HOME
+ /usr/local/ant
+$ echo $PATH
+$ ant -version
