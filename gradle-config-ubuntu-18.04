@@ -1,0 +1,47 @@
+# How to Install Gradle on Ubuntu 18.04
+
+# Gradle is a general-purpose build tool used primarily for Java projects. It combines the best features of Ant and Maven. Unlike its predecessors which use XML for scripting, Gradle uses Groovy, a dynamic, object-oriented programming language for the Java platform to define the project and build scripts.
+
+# Prerequisites
+-------------
+
+# In order to be able to install packages on your Ubuntu system, you must be logged in as a user with sudo privileges.
+
+# Installing Gradle on Ubuntu
+
+# Gradle requires Java JDK or JRE version 7 or above to be installed. We’ll install OpenJDK 8.
+
+$ sudo apt update
+$ sudo apt install openjdk-8-jdk
+$ java -version
+
+
+2. Download Gradle
+# At the time of writing this article, the latest version of Gradle is 5.0. Before continuing with the next step you should check the Gradle releases page to see if a newer version is available.
+
+$ wget https://services.gradle.org/distributions/gradle-5.0-bin.zip -P /tmp
+$ sudo unzip -d /opt/gradle /tmp/gradle-*.zip
+$ ls /opt/gradle/gradle-5.0 
+
+3. Setup environment variable 
+
+$ sudo leafpad /etc/profile.d/gradle.sh
+
+# Paste the following configuration:
+
+export GRADLE_HOME=/opt/gradle/gradle-5.0
+export PATH=${GRADLE_HOME}/bin:${PATH}
+
+$ sudo chmod +x /etc/profile.d/gradle.sh
+$ source /etc/profile.d/gradle.sh
+
+
+4. Verify the Gradle installation
+To validate that Gradle is installed properly use the gradle -v command which will display the Gradle version:
+
+$ gradle -v
+
+
+
+
+
