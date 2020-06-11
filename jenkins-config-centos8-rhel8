@@ -1,0 +1,24 @@
+Installing Jenkins in RHEL8/CENTOS8 
+Install Java Package 
+#  wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u141-b15/336fa29ff2bb4ef291e347e091f7f4a7/jdk-8u141-linux-x64.rpm
+# sudo yum install -y jdk-8u141-linux-x64.rpm
+# java -version
+Install Jenkins Package
+# yum update -y 
+#  sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+# sudo rpm –import https://pkg.jenkins.io/redhat/jenkins.io.key
+#  sudo yum install jenkins -y
+# systemctl restart jenkins 
+# systemctl enable –now jenkins 
+
+ Connect to http://<your_server_public_DNS>:8080 from your favorite browser. You will be able to access Jenkins through its management interface:
+
+As prompted, enter the password found in /var/lib/jenkins/secrets/initialAdminPassword. Use the following command to display this password:
+# cat /var/lib/jenkins/secrets/initialAdminPassword
+
+The Jenkins installation script directs you to the Customize Jenkins page. Click Install suggested plugins.
+Once the installation is complete, enter Administrator Credentials, click Save Credentials, and then click Start Using Jenkins.
+
+On the left-hand side, click Manage Jenkins, and then click Manage Plugins.
+
+
