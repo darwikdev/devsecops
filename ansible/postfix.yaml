@@ -12,3 +12,8 @@
       service:  
         name: postfix
         state: started        
+    handlers: 
+    - name: update_postfix
+      service:
+        name: postfix
+        state: restarted
