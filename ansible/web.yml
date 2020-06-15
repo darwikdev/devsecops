@@ -1,12 +1,20 @@
 ---
-- name: 
+- name: deployment of web  
   hosts: all
+  vars_files: 
+    - require.yml
   tasks: 
-    - name: 
+    - name: installing latest update 
       yum: 
-        name: httpd
+        name: "{{web}}"
         state: latest
-    - name:
+
+    - name: start and enable httpd services
       service:
-        name: httpd
+        name: "{{svc}}"
         state: started
+
+    - name: Inserting Text  
+      templates: 
+        src: template/index.html
+        dest: /var/www/html/index.html   
