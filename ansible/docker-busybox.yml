@@ -2,8 +2,14 @@
 - name: 
   hosts: all 
   tasks:
-    - name: data container
+    - name: nginx web server
       docker_container:
         name: mydata
         image: nginx
+
+    - name: ubuntu container start
+      docker_container:
+        name: mycontainer
         state: present
+        image: ubuntu
+        command: sleep infinity
