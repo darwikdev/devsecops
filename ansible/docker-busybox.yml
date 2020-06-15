@@ -1,0 +1,9 @@
+---
+- name: 
+  hosts: all 
+  tasks:
+    - name: data container
+      docker_container:
+        name: mydata
+        image: busybox
+        state: present
