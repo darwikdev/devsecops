@@ -5,5 +5,5 @@
     - name: data container
       docker_container:
         name: mydata
-        image: busybox
+        image: nginx
         state: present
