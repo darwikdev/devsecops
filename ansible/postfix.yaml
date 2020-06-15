@@ -1,0 +1,13 @@
+---
+- name: Postfix Config
+  hosts: all
+  tasks: 
+    - name: postfix is installed and updated
+      yum: 
+        name: postfix
+        state: latest
+      notify: update_postfix
+    - name: Postfix is installed and updated
+      service:  
+        name: postfix
+        state: started        
