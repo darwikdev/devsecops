@@ -1,6 +1,7 @@
 ---
 - name: Postfix Config
   hosts: all
+  user: root
   tasks: 
     - name: postfix is installed and updated
       yum: 
