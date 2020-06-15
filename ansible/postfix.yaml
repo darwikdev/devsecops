@@ -7,13 +7,7 @@
       yum: 
         name: postfix
         state: latest
-      notify: update_postfix
     - name: Postfix is installed and updated
       service:  
         name: postfix
         state: started        
-    handlers: 
-    - name: update_postfix
-      service:
-        name: postfix
-        state: restarted
