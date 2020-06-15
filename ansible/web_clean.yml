@@ -1,0 +1,16 @@
+---
+- name: deployment of web  
+  hosts: all
+  vars_files: 
+    - require.yml
+  tasks: 
+    - name: Removing apache package
+      yum: 
+        name: "{{web}}"
+        state: absent
+
+
+    - name: Removing Text  
+      file: 
+        dest: /var/www/html/index.html   
+        state: absent
