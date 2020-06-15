@@ -1,0 +1,9 @@
+---
+- name: 
+  hosts: all 
+  tasks: 
+  - name: 
+    yum:
+      name:
+        - python3
+      state: latest
