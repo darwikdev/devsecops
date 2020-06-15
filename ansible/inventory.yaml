@@ -1,11 +1,15 @@
 web_servers:
   hosts:
-    servera.lab.example.com:
+    servera.lab.example.com: 
+        ansible_python_interpreter=/usr/bin/python3:
     serverb.lab.example.com:
+        ansible_python_interpreter=/usr/bin/python3:
 db_servers: 
   hosts:
     serverc.lab.example.com:
+        ansible_python_interpreter=/usr/bin/python3:
     serverd.lab.example.com:
+        ansible_python_interpreter=/usr/bin/python3:
 region_eu:
   children:
     web_servers:
