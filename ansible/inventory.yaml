@@ -1,0 +1,15 @@
+web_servers:
+  hosts:
+    servera.lab.example.com:
+    serverb.lab.example.com:
+db_servers: 
+  hosts:
+    serverc.lab.example.com:
+    serverd.lab.example.com:
+region_eu:
+  children:
+    web_servers:
+    db_servers:
+all:
+  children:
+    region_eu:
