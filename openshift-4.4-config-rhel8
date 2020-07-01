@@ -1,0 +1,177 @@
+## INSTALL OPENSHIFT 4.4.2 DEPLOY OVER AWS INSTANCES  
+Author : sandeep Anuragi
+
+#Switch to root using the sudo command and double check your GUID:
+sudo -i
+
+# Download the latest AWS Command Line Interface
+curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+unzip awscli-bundle.zip
+
+# Install the AWS CLI into /bin/aws
+./awscli-bundle/install -i /usr/local/aws -b /bin/aws
+
+# Validate that the AWS CLI works
+aws --version
+
+# Clean up downloaded files
+rm -rf /root/awscli-bundle /root/awscli-bundle.zip
+
+#Get the OpenShift installer binary:
+
+OCP_VERSION=4.4.3
+
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OCP_VERSION}/openshift-install-linux-${OCP_VERSION}.tar.gz
+
+tar zxvf openshift-install-linux-${OCP_VERSION}.tar.gz -C /usr/bin
+
+rm -f openshift-install-linux-${OCP_VERSION}.tar.gz /usr/bin/README.md
+
+chmod +x /usr/bin/openshift-install
+
+#Get the oc CLI tool:
+
+wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${OCP_VERSION}/openshift-client-linux-${OCP_VERSION}.tar.gz
+
+tar zxvf openshift-client-linux-${OCP_VERSION}.tar.gz -C /usr/bin
+
+rm -f openshift-client-linux-${OCP_VERSION}.tar.gz /usr/bin/README.md
+
+chmod +x /usr/bin/oc
+
+
+#Check that the OpenShift installer and CLI are in /usr/bin:
+
+ls -l /usr/bin/{oc,openshift-install}
+Sample Output
+-rwxr-xr-x. 2 root root  75916904 Apr 26 19:59 /usr/bin/oc*
+-rwxr-xr-x. 1 root root 354664448 Apr 26 20:07 /usr/bin/openshift-install*
+
+#Set up bash completion for the OpenShift CLI:
+
+oc completion bash >/etc/bash_completion.d/openshift
+
+# Press Ctrl+D or type exit to log out of your root shell.
+
+# Save your provided AWS credentials to the $HOME/.aws/credentials file, making sure to replace YOURACCESSKEY and YOURSECRETACCESSKEY with your individual credentials:
+
+
+export AWSKEY=<YOURACCESSKEY>
+export AWSSECRETKEY=<YOURSECRETKEY>
+export REGION=us-east-2
+
+mkdir $HOME/.aws
+cat << EOF >>  $HOME/.aws/credentials
+[default]
+aws_access_key_id = ${AWSKEY}
+aws_secret_access_key = ${AWSSECRETKEY}
+region = $REGION
+EOF
+
+# Check to see that your credentials work:
+
+aws sts get-caller-identity
+
+Sample Output
+{
+    "Account": "657952645207",
+    "UserId": "AIDAZSMIIUBLQD3YHF4Z6",
+    "Arn": "arn:aws:iam::657952645207:user/wkulhane@redhat.com-b91e"
+}
+
+# Using your browser, go to https://www.openshift.com/try.
+
+# Click Create your Own Cluster and then Try it in the cloud →
+
+# Log in with your Red Hat login.
+
+# You need a Red Hat Subscription or Developer Account to access the OpenShift page.
+For Infrastructure Provider, click AWS.
+
+# Click Installer-Provisioned-Infrastructure.
+
+# Ignore all other instructions, find the section Pull Secret, click Copy Pull Secret to place the secret in your clipboard, and then save it to a file.
+
+# You paste the pull secret into the prompt of the installer later.
+
+Example Pull Secret
+
+{"auths":{"cloud.openshift.com":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K3JocGRzYWRtaW5zcmVkaGF0Y29tMWZyZ3NpZHV6cTJkem5zajNpdzBhdG1samg3OjJMSTFEVTM1MFVCQks1ODRCTFVBODBFTTUABDDD13RDI0Qko2Q0I5VzNFSFIzS0pSSFhOSFgyVllNMlFFMVQ=","email":"youremail@redhat.com"},"quay.io":{"auth":"b3BlbnNoaWZ0LXJlbGVhc2UtZGV2K3JocGRzYWRtaW5zcmVkaGF0Y29tMWZyZ3NpZHV6cTJkem5zajNpdzBhdG1samg3OjJMSTFEVTM1MFVCQks1ODRCTFVBODBFTTUABDDD13RDI0Qko2Q0I5VzNFSFIzS0pSSFhOSFgyVllNMlFFMVQ=","email":"youremail@redhat.com"},"registry.connect.redhat.com":{"auth":"NTE1NDg0ODB8dWhjLTFGckdzSURVWlEyRHpuU0ozaVcwQXRtTEpoNzpleUpoYkdjaU9pSlNVelV4TWlKOS5leUp6ZFdJaU9pSXpPR1prTVdJNFpqYzJOamcwTmpKbVlXTTRaVFpsWVRnd09EUTJOMkkzTnlKOS5YUmQ5LS1LQ3kzVlpVbF9ldTc0THpQMFEzOVYwRUVfeWRZOE5pVGRScUlyd2hVRHYtcFF2ZEtLV1ZpVmlaQWF0QkhEUVdmVDB1Z2pfTWIzYmNPUktqSXdBNldQTXYxWTc1RmhYQUg1S2Myc3lnSHVxWTRfZlhSOXJnbW42N0l0MmhiUXJyb3BBNXlaYXpXSzhPeTBJb29VWFAteDBPUjZ2VDJTVGktbm5sblBLbEFSWTBEZkxJYmk3OHZlZXFadUpyUDl4SzlXdnRaOEZOREpzQnlUc2VmeFRoVmtLMDVwVDlhTk9nTkxITGJMeU5sdEc1RE9xU1JiZ1hLMDJ6RXNaU3BwYmZLdVAwNVJYQWljQy14WEZiamtLaFpkYTgwV3lnZDJKcTZXWVF3WW83ZXgtLUh1MEpKeXBTczRINVY0Nm50dTNVRlNVUERBZEJ5VmVDU2RxckpzUWZoSmlpLVdJbXdjWnp6LUNwTlRfNVo0ei1WUkc0aV9hVF9TWnVkQzVySmFLdFpHS1RQWlg0SDlNLWxDeFlHZDJNYzhuWlc4NWVUeTJPYnBVOHA2S19sU3A3Wm15RzhEbWh6bFAtYTQzb0J1V3hJTHg3Y283U3BkOFRyYVNRbjVnaFpvc0VKZGp6X2ljTlFhVktNazFHQjEwbU1uOXJBeGdUcm5qU09aSEZvcXdmX2Y2dnZFWi0ySUp2Qk91UUZRQThsZDlzRDVDb1ZWNEdwTWx1Rl8zZGJqcXhuVTE0WXdHT2RhSldSOEtMTlFwbU9RV0JrWFJIcVpwN01UT0ZDX0dMVDRWeGNTMXhva0p6RUFxN1c4NzBSQVo4VnAtUGdscEJCc2RDT2tfdGNCNEY5T2hkZ0NPb3JMNHJkZmp6cEJobUZuMEhzVkFFNGJkaWhfRjNGSQ==","email":"youremail@redhat.com"},"registry.redhat.io":{"auth":"NTE1NDg0ODB8dWhjLTFGckdzSURVWlEyRHpuU0ozaVcwQXRtTEpoNzpleUpoYkdjaU9pSlNVelV4TWlKOS5leUp6ZFdJaU9pSXpPR1prTVdJNFpqYzJOamcwTmpKbVlXTTRaVFpsWVRnd09EUTJOMkkzTnlKOS5YUmQ5LS1LQ3kzVlpVbF9ldTc0THpQMFEzOVYwRUVfeWRZOE5pVGRScUlyd2hVRHYtcFF2ZEtLV1ZpVmlaQWF0QkhEUVdmVDB1Z2pfTWIzYmNPUktqSXdBNldQTXYxWTc1RmhYQUg1S2Myc3lnSHVxWTRfZlhSOXJnbW42N0l0MmhiUXJyb3BBNXlaYXpXSzhPeTBJb29VWFAteDBPUjZ2VDJTVGktbm5sblBLbEFSWTBEZkxJYmk3OHZlZXFadUpyUDl4SzszrefOEZOREpzQnlUc2VmeFRoVmtLMDVwVDlhTk9nTkxITGJMeU5sdEc1RE9xU1JiZ1hLMDJ6RXNaU3BwYmZLdVAwNVJYQWljQy14WEZiamtLaFpkYTgwV3lnZDJKcTZXWVF3WW83ZXgtLUh1MEpKeXBTczRINVY0Nm50dTNVRlNVUERBZEJ5VmVDU2RxckpzUWZoSmlpLVdJbXdjWnp6LUNwTlRfNVo0ei1WUkc0aV9hVF9TWnVkQzVySmFLdFpHS1RQWlg0SDlNLWxDeFlHZDJNYzhuWlc4NWVUeTJPYnBVOHA2S19sU3A3Wm15RzhEbWh6bFAtYTQzb0J1V3hJTHg3Y283U3BkOFRyYVNRbjVnaFpvc0VKZGp6X2ljTlFhVktNazFHQjEwbU1uOXJBeGdUcm5qU09aSEZvcXdmX2Y2dnZFWi0ySUp2Qk91UUZRQThsZDlzRDVDb1ZWNEdwTWx1Rl8zZGJqcXhuVTE0WXdHT2RhSldSOEtMTlFwbU9RV0JrWFJIcVpwN01UT0ZDX0dMVDRWeGNTMXhva0p6RUFxN1c4NzBSQVo4VnAtUGdscEJCc2RDT2tfdGNCNEY5T2hkZ0NPb3JMNHJkZmp6cEJobUZuMEhzVkFFNGJkaWhfRjNGSQ==","email":"youremail@redhat.com"}}}
+
+
+# Double check that your pull secret contains credentials for all three container registries: quay.io, registry.connect.redhat.com, and registry.redhat.io as well as cloud.openshift.com.
+
+# You can now close or minimize the browser window and return to your installer VM.
+
+# Create an SSH keypair to be used for your OpenShift environment:
+
+ssh-keygen -f ~/.ssh/cluster-${GUID}-key -N ''
+
+
+Install OpenShift Container Platform
+
+Run the OpenShift installer and answer the prompts:
+
+* Select your Public Key, replacing GUID with your assigned GUID.
+
+* Select aws as the Platform.
+
+* Select any Region near you, except us-east-1.
+
+The default is us-east-2.
+
+* Select sandboxNNN.opentlc.com as the Base Domain, where NNN is your SANDBOXID.
+
+* For the Cluster Name, type cluster-GUID, replacing GUID with your GUID.
+
+* This gives the cluster a unique name.
+
+* When prompted, paste the contents of your Pull Secret in JSON format.
+
+* Do not include any spaces or white characters and make sure it is in one line.
+
+
+openshift-install create cluster --dir $HOME/cluster-${GUID}
+
+? SSH Public Key /home/<OpenTLC User>/.ssh/cluster-<GUID>-key.pub
+? Platform aws
+INFO Credentials loaded from the "default" profile in file "/home/<OpenTLC User>/.aws/credentials"
+? Region us-east-2 (Ohio)
+? Base Domain sandboxNNN.opentlc.com
+? Cluster Name cluster-<GUID>
+? Pull Secret [? for help] ***************************************************************************************************************************************************************
+
+Make note of the following items from the output of the install command:
+
+The location of the kubeconfig file, which is required for setting the KUBECONFIG environment variable and, as suggested, sets the OpenShift user ID to system:admin.
+
+The kubeadmin user ID and associated password (GEveR-tBVTB-jJUJB-iC9Jn in the example).
+
+The password for the kubeadmin user is also written into the auth/kubeadmin-password file.
+
+The URL of the web console (https://console-openshift-console.apps.cluster-<GUID>.sandbox<SANDBOXID>.opentlc.com in the example) and the credentials (again) to log into the web console.
+
+Optionally, save this information into a text file on your bastion host.
+
+It is possible to run a multi-step installation.
+
+Create the installation configuration: openshift-install create install-config --dir $HOME/cluster-${GUID}.
+
+Update the generated install-config.yaml file—for example, change the AWS EC2 instance types.
+
+Create the YAML manifest templates: openshift-install create manifests --dir $HOME/cluster-${GUID}.
+
+Changing the manifest templates is unsupported.
+
+Create the YAML manifests: openshift-install create manifests --dir $HOME/cluster-${GUID}
+
+Changing the manifests is unsupported.
+
+Create the Ignition configuration files: openshift-install create ignition-configs --dir $HOME/cluster-${GUID}.
+
+Changing the Ignition configuration files is unsupported.
+
+Install the cluster: openshift-install create cluster --dir $HOME/cluster-${GUID}.
+
+To delete the cluster, use: openshift-install destroy cluster --dir $HOME/cluster-${GUID}.
+
