@@ -6,3 +6,4 @@
       docker_container:
         name: mydata
         state: absent
+...
