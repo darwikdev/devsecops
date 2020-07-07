@@ -1,0 +1,19 @@
+---
+- name: pulling centos from docker registry
+  hosts: lab1,lab2
+  tasks: 
+
+  - name: pull an image from docker-hub
+    docker_image:
+      name: pacur/centos-7
+      source: pull
+#  - name: Create a data container
+#    docker_container:
+#      name: mydata
+#      image: pacur/centos-7
+#      volumes:
+#        - /data  
+  - name: Stop a container
+    docker_container:
+      name: mydata
+      state: absent

@@ -1,0 +1,17 @@
+---
+- hosts: all  
+  gather_facts: false
+  ignore_errors: yes
+  tasks: 
+  - name: Register as user (darwikdev) with password (ser3r3efsf3frfefw) and auto-subscribe to available content.
+    redhat_subscription:
+      state: present
+      username: TRAININGBASKET
+      password: renusinha123
+      auto_attach: true
+  - name: auto attach rhsm repository
+    shell: subscription-manager  --auto attach 
+  - name: Enable a RHSM repository
+    rhsm_repository:
+      name: ansible-2.9-for-rhel-8-x86_64-rpms
+      state: enabled

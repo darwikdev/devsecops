@@ -1,0 +1,29 @@
+---
+- name: Install application 
+  hosts: all 
+  vars:
+    packages: 
+      - postfix
+      - mariadb-server
+
+  tasks: 
+  - name: Ensure that packages are installed
+    yum: 
+      name: "{{ packages }}"
+      state: installed
+### tag task play
+    tags: 
+      - install
+- name: Starting the services on the web servers
+  hosts: all
+  become: True
+  gather_facts: False
+  tasks:
+    - name: Ensure the services are started
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - httpd
+        - mariadb 

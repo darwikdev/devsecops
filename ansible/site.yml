@@ -1,0 +1,13 @@
+---
+- name: Web application smoke test
+  hosts: all
+  gather_facts: no
+  tasks:
+  - name: Verify content of http://localhost
+    uri:
+      url: http://lab1
+      return_content: yes
+    register: test_url
+    #  failed_when: "'Hello from' not in test_url.content"
+  tags:
+    - tests

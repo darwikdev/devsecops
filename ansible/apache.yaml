@@ -1,0 +1,25 @@
+---
+- name: Setup web services
+  hosts: 
+## 1
+  tags: 
+    - setup 
+## 2 
+  tasks: 
+  - name: Install httpd 
+    yum: 
+      name: httpd
+      state: present
+    tags: 
+      - install 
+## 3 
+  tasks:
+  - name: Include common web services tasks
+    include_tasks: common.yml
+    tags:
+      - webproxy
+      - webserver
+roles:
+- { role: databases, tags: ['production', 'staging'] }
+
+

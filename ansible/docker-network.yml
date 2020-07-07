@@ -1,0 +1,15 @@
+---
+- name: creating postgres  
+  hosts: all
+  tasks: 
+  - name: 
+    docker_image:
+      name: postgres:latest 
+      source: pull
+
+  - name: Create db container and connect to network
+    docker_container:
+      name: db_test
+      image: ostgres:latest
+      networks:
+        - name: "{{ docker_network_name }}"
