@@ -10,6 +10,6 @@
   - name: Create db container and connect to network
     docker_container:
       name: db_test
-      image: ostgres:latest
+      image: postgres:latest
       networks:
         - name: "{{ docker_network_name }}"
