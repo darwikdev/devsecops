@@ -55,3 +55,9 @@
       loop:
         - httpd
         - mariadb
+    - name: 
+      firewalld: 
+        service: httpd
+        immediate: yes 
+        permanent: yes 
+        state: enabled
