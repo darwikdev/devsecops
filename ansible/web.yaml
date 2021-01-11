@@ -57,7 +57,7 @@
         - mariadb
     - name: 
       firewalld: 
-        service: httpd
+        service: http
         immediate: yes 
         permanent: yes 
         state: enabled
