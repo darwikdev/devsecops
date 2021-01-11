@@ -1,8 +1,8 @@
 ---
 - name: Example play using tagging
   hosts:
-    - lab1
-    - lab2
+    - servera
+    - serverb
   tasks:
   - name: Notify start of process
     debug:
