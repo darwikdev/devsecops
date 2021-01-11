@@ -1,16 +1,17 @@
 ---
 - name: deployment of web  
   hosts: all
-  vars_files: 
-    - require.yml
   tasks: 
     - name: Removing apache package
       yum: 
-        name: "{{web}}"
+        name: 
+          - httpd
+          - mod_ssl
+          - mariadb 
         state: absent
-
-
-    - name: Removing Text  
-      file: 
-        dest: /var/www/html/index.html   
-        state: absent
+    - name: 
+      firewalld: 
+        service: http
+        permanent: true
+        immediate: yes 
+        state: enabled
