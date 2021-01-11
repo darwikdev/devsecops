@@ -1,3 +1,0 @@
-web: httpd
-svc: httpd
-rule: http
